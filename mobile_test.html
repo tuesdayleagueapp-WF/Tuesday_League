@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuesday League Mobile</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        /* This is the magic: Stack vertically on phones, side-by-side on wide screens */
+        .score-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .input-group { background: #1e1e1e; padding: 15px; border-radius: 10px; flex: 1; min-width: 140px; }
+        
+        input, select { width: 100%; padding: 12px; font-size: 18px; border-radius: 5px; border: none; box-sizing: border-box; }
+        button { background: #007bff; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; width: 100%; }
+        button:active { background: #0056b3; }
+        .status { color: #ff4444; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h2>Tuesday League</h2>
+    
+    <div id="loginSection">
+        <select id="tableSelect">
+            <option>Table 1</option>
+            <option>Table 2</option>
+            <option>Table 3</option>
+        </select>
+        <br><br>
+        <input type="password" id="passwordInput" placeholder="Enter Password" inputmode="numeric">
+        <br><br>
+        <button onclick="testLogin()">LOGIN</button>
+    </div>
+
+    <div id="scoreSection" style="display:none;">
+        <h3 id="matchHeader">Match Score Entry</h3>
+        <div class="score-row">
+            <div class="input-group">
+                <label>P1 Game 1</label>
+                <input type="number" id="p1g1" inputmode="numeric">
+            </div>
+            <div class="input-group">
+                <label>P2 Game 1</label>
+                <input type="number" id="p2g1" inputmode="numeric">
+            </div>
+        </div>
+        <br>
+        <button onclick="alert('Sending to Sheets...')">SUBMIT SCORE</button>
+    </div>
+
+    <div id="status" class="status">Waiting for login...</div>
+</div>
+
+<script>
+    const WEB_APP_URL = "PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+    function testLogin() {
+        const pass = document.getElementById('passwordInput').value;
+        const status = document.getElementById('status');
+        
+        status.innerText = "Connecting...";
+        
+        // This is a direct test - if password is '1234', show scores
+        if(pass === "1234") {
+            document.getElementById('loginSection').style.display = "none";
+            document.getElementById('scoreSection').style.display = "block";
+            status.innerText = "Login Success!";
+        } else {
+            status.innerText = "Login Failed! (Try 1234)";
+        }
+    }
+</script>
+
+</body>
+</html>
