@@ -1,0 +1,292 @@
+:root {
+    --vh: 1vh;
+    --button-bottom: 20px;
+    --accent: #4ea1ff;
+    --bg: #000;
+    --panel: #071018;
+    --muted: #9aa3ad;
+    --card-border: rgba(255,255,255,0.03);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #eee;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+select, input, button, .btn {
+    -webkit-tap-highlight-color: transparent !important;
+    background-clip: padding-box;
+    box-sizing: border-box;
+}
+
+select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #0b0d0f;
+    color: #fff;
+    border: 1px solid #222;
+    outline: none;
+}
+
+.wrap {
+    max-width: 900px;
+    margin: 14px auto;
+    padding: 14px;
+    background: #000;
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+    position: relative;
+}
+
+h1 {
+    margin: 0 0 6px 0;
+    text-align: center;
+    color: var(--accent);
+    font-size: 1.2rem;
+}
+
+.modal h1 {
+    position: relative;
+    z-index: 1500;
+    background: #000;
+    margin-bottom: 0;
+    padding-bottom: 10px;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+select, input {
+    width: 100%;
+    padding: 11px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #222;
+    background: #0b0d0f;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* REPAIRED BUTTONS: Using standard flex without column stacking to avoid "Dot" bug */
+.btn {
+    background: #1982ff;
+    color: #fff;
+    border: 0;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 48px;
+    line-height: 1.2;
+}
+
+    .btn.alt {
+        background: #2f3540;
+        color: #fff;
+    }
+
+.controls-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    .controls-row .btn {
+        flex: 1 1 auto;
+        min-width: 110px;
+    }
+
+/* FIX FOR THE RADIO BUTTONS (Normal / Sudden Death) */
+.radioRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 6px;
+    background: #070d12;
+    padding: 10px; /* added padding to prevent text-clipping */
+    border-radius: 8px;
+}
+
+.inline {
+    display: flex; /* Ensure radio and text align perfectly */
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    color: #eee;
+    font-size: 0.95rem;
+}
+
+    .inline input[type="radio"] {
+        width: 18px; /* Force size so it doesn't become a dot */
+        height: 18px;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+/* Sudden Death specific wrap fix */
+.sudden-death {
+    white-space: normal !important;
+    line-height: 1.1;
+    max-width: 100px; /* Encourages clean 2-line wrap on mobile */
+}
+
+/* Match list */
+#matchList {
+    margin-top: 12px;
+    max-height: 420px;
+    overflow: auto;
+    border-radius: 8px;
+    border: 1px solid #15181b;
+    padding: 6px;
+    background: #000;
+}
+
+.matchRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+    min-height: 64px;
+}
+
+    .matchRow.played {
+        background: linear-gradient(90deg, rgba(78,161,255,0.04), rgba(78,161,255,0.01));
+        border-left: 4px solid var(--accent);
+        padding-left: 10px;
+    }
+
+/* Score entry */
+.gameRow {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    align-items: center;
+}
+
+input[type=number] {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #222;
+    background: #0f1315;
+    color: #fff;
+    flex: 1;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+/* Rankings Grid */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal {
+    width: 96%;
+    max-width: 1100px;
+    background: #000;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #222;
+    color: #fff;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.rankingsWrap {
+    max-height: 72vh;
+    overflow: auto;
+    border-radius: 8px;
+    border: 1px solid #111;
+    padding: 6px;
+    position: relative;
+    background: #000;
+}
+
+.rank-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    min-width: 700px;
+}
+
+    .rank-grid thead th {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background-color: #0b0d0f;
+        background-clip: padding-box;
+        color: var(--muted);
+        padding: 20px 6px;
+        border-bottom: 2px solid #222;
+        text-align: left;
+        white-space: nowrap;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .rank-grid tbody tr.row-card td {
+        background: linear-gradient(90deg,#06384a,#001217) !important;
+        color: #fff;
+        padding: 12px;
+        border-top: 4px solid #000;
+        border-bottom: 4px solid #000;
+    }
+
+        .rank-grid tbody tr.row-card td:first-child {
+            border-left: 4px solid #000;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .rank-grid tbody tr.row-card td:last-child {
+            border-right: 4px solid #000;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+/* MOBILE fixes */
+@media (max-width:720px) {
+    .radioRow {
+        justify-content: space-between;
+    }
+
+    .rankingsWrap {
+        overflow-x: auto;
+        max-height: calc(100vh - 110px);
+        padding: 0 6px 6px 6px !important;
+    }
+
+    .rank-grid {
+        display: table;
+        min-width: 700px;
+    }
+}
