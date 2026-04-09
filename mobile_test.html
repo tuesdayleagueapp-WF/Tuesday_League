@@ -1,208 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tuesday League | Mobile Entry</title>
-  <style>
-    :root {
-      /* fallback — will be overwritten by JS */
-      --vh: 1vh;
-      --button-bottom: 20px;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: calc(var(--vh, 1vh) * 100); /* use JS-calculated viewport height */
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #121212;
-      color: white;
-      /* use the hall photo, no background-attachment: fixed on mobile */
-      background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('Web_Site/WFSSC_Hall.jpg');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: flex-start; /* keep content from vertically centering (so background shows) */
-      justify-content: center;
-      box-sizing: border-box;
-    }
-
-    /* container */
-    .container {
-      background: rgba(0, 0, 0, 0.85);
-      padding: 20px 20px 100px 20px; /* extra bottom padding so content isn't hidden by the fixed button */
-      border-radius: 16px;
-      border: 1px solid rgba(0, 123, 255, 0.45);
-      max-width: 92%;
-      width: 420px;
-      margin-top: 36px; /* move down to show more of the image top */
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      text-align: center;
-      backdrop-filter: blur(6px);
-    }
-
-    h2 { margin: 0 0 6px; color: #007bff; text-transform: uppercase; letter-spacing: 2px; }
-    .subtitle { color: #cfcfcf; font-size: 0.9em; margin-bottom: 18px; }
-
-    select, input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: rgba(30,30,30,0.85);
-      color: white;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    /* smaller button styling */
-    .btn {
-      background: #007bff;
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      min-width: 110px;
-      cursor: pointer;
-      transition: transform .14s ease, background .14s ease;
-    }
-    .btn:active { transform: scale(.98); background: #0056b3; }
-
-    .score-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; text-align:left; }
-    .input-group { flex:1; min-width:110px; }
-    .input-group label { display:block; font-size:.8em; color:#ccc; margin-bottom:6px; }
-
-    .status { color: #ffbc00; margin-top: 14px; font-size: 0.85em; font-weight: 700; }
-
-    /* Fixed submit button - uses CSS variable for bottom spacing */
-    #fixedSubmitBtn {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(var(--button-bottom, 20px) + env(safe-area-inset-bottom));
-      z-index: 1100;
-      box-shadow: 0 6px 18px rgba(0,123,255,0.25);
-      border-radius: 12px;
-      padding: 10px 18px;
-      font-weight: 700;
-      font-size: 14px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      min-width: 120px;
-    }
-
-    @media (max-width: 520px) {
-      .container { width: 92%; margin-top: 24px; padding: 16px 16px 110px 16px; }
-      #fixedSubmitBtn { min-width: 110px; font-size: 13px; }
-    }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tuesday League</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="container" id="mainContainer">
-    <h2>Tuesday League</h2>
-    <div class="subtitle">West Fife Community Sports Club</div>
+    <div class="wrap">
+        <h1>Tuesday League</h1>
+        <div class="muted">Live Match Scoring & Rankings</div>
 
-    <div id="loginSection">
-      <select id="tableSelect">
-        <option>Table 1</option>
-        <option>Table 2</option>
-        <option>Table 3</option>
-      </select>
+        <!-- LOGIN -->
+        <div id="loginSection">
+            <label>Select Table</label>
+            <select id="tableSelect">
+                <option value="1" selected>Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
 
-      <input id="passwordInput" type="password" placeholder="Enter Password" inputmode="numeric" />
-      <div style="margin-top:10px;">
-        <button class="btn" onclick="testLogin()">LOGIN</button>
-      </div>
+            <label>PIN Password</label>
+            <div class="pass-wrap">
+                <input id="passwordInput" type="password" inputmode="numeric" placeholder="Enter PIN">
+                <button type="button" id="togglePass" class="eye-btn">👁️</button>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:10px;">
+                <div style="flex:1">
+                    <label>Games</label>
+                    <select id="loginGamesSelect">
+                        <option value="2">2 Games</option>
+                        <option value="3" selected>3 Games</option>
+                    </select>
+                </div>
+                <div style="flex:1">
+                    <label>Format</label>
+                    <div class="radioRow" id="formatRow">
+                        <label class="inline"><input type="radio" name="mode" value="normal"> Normal</label>
+                        <!-- added sudden-death class to this label -->
+                        <label class="inline sudden-death"><input type="radio" name="mode" value="sudden" checked> Sudden Death</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <button id="loginBtn" class="btn" style="flex:1">LOGIN</button>
+                <button id="rankBtnLogin" class="btn alt">Rankings</button>
+            </div>
+
+            <div id="loginMsg" class="small">Enter PIN then fetch</div>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div id="optionsSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div>
+                    <label style="margin:0">Scheduled Matches</label>
+                    <div class="muted" style="margin-top:4px">Select a match to score</div>
+                </div>
+                <div>
+                    <!-- added sudden-death class to the pill so it's targeted by CSS -->
+                    <span class="label-pill sudden-death" id="modeBadge">Sudden Death</span>
+                    <span class="label-pill" id="gamesBadge">3 Games</span>
+                </div>
+            </div>
+
+            <div class="controls-row" style="margin-bottom:8px;">
+                <button id="backToLoginBtn" class="btn alt">Back</button>
+                <button id="refreshBtn" class="btn alt">Refresh</button>
+                <button id="rankBtnList" class="btn alt">Rankings</button>
+                <button id="logoutBtn" class="btn alt">Logout</button>
+            </div>
+
+            <div id="matchList">Loading...</div>
+        </div>
+
+        <!-- SCORE ENTRY -->
+        <div id="scoreSection" style="display:none;">
+            <label>Direct Score Entry</label>
+            <div id="selectedMatch" class="selectedMatchCard"></div>
+            <div id="gamesContainer"></div>
+            <div class="controls-row" style="margin-top:12px;">
+                <button id="backToMatchesBtn" class="btn alt">Back</button>
+            </div>
+            <div id="submitMsg" class="small"></div>
+        </div>
     </div>
 
-    <div id="scoreSection" style="display:none;">
-      <div class="score-row">
-        <div class="input-group"><label>Player 1 (G1)</label><input type="number" id="p1g1" inputmode="numeric"></div>
-        <div class="input-group"><label>Player 2 (G1)</label><input type="number" id="p2g1" inputmode="numeric"></div>
-      </div>
-      <div style="height:10px"></div>
-      <div class="status" id="status">Ready</div>
+    <button id="fixedSubmit">SUBMIT SCORES</button>
+
+    <!-- Rankings Overlay -->
+    <div id="rankModalBackdrop" class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rankTitle">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <h2 id="rankTitle" style="margin:0">League Rankings</h2>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <button id="closeRank" class="btn alt">Close</button>
+                </div>
+            </div>
+            <div class="rankingsWrap" id="rankingsContainer">Calculating...</div>
+        </div>
     </div>
-  </div>
 
-  <button id="fixedSubmitBtn" style="display:none" onclick="submitScores()">SUBMIT SCORES</button>
-
-  <script>
-    // Use JS to set a proper --vh and to detect keyboard / resize so button is never hidden
-    (function() {
-      const docEl = document.documentElement;
-      let initialInnerHeight = window.innerHeight;
-
-      function setVhVar() {
-        // 1vh = window.innerHeight * 0.01
-        const vh = window.innerHeight * 0.01;
-        docEl.style.setProperty('--vh', `${vh}px`);
-      }
-
-      function updateButtonBottom() {
-        // If the viewport height shrinks a lot, assume keyboard is open and raise the button
-        const currentInner = window.innerHeight;
-        const delta = Math.max(0, initialInnerHeight - currentInner);
-        // if delta is small, treat as normal (browser chrome hide/show), else keyboard
-        if (delta > 150) {
-          // keyboard likely open: raise button above the keyboard area
-          const newBottom = 20 + delta; // 20px margin + keyboard height
-          docEl.style.setProperty('--button-bottom', `${newBottom}px`);
-        } else {
-          docEl.style.setProperty('--button-bottom', `20px`);
-        }
-      }
-
-      // Initial setup
-      setVhVar();
-      updateButtonBottom();
-
-      // Update on resize and orientation change
-      window.addEventListener('resize', () => {
-        // On some mobile browsers the first resize is the URL bar hide/show — update vh anyway
-        setVhVar();
-        updateButtonBottom();
-      });
-
-      // Also update when focus/blur on inputs (helps get more responsive behavior)
-      window.addEventListener('orientationchange', () => {
-        // re-evaluate the initial height after rotation
-        initialInnerHeight = window.innerHeight;
-        setTimeout(() => { setVhVar(); updateButtonBottom(); }, 300);
-      });
-
-      // Optional: when an input gets focus, re-evaluate (some browsers delay resize)
-      document.addEventListener('focusin', () => { setTimeout(() => { setVhVar(); updateButtonBottom(); }, 250); });
-      document.addEventListener('focusout', () => { setTimeout(() => { setVhVar(); updateButtonBottom(); }, 250); });
-
-    })();
-
-    // placeholder logic: login + submit
-    function testLogin() {
-      const pass = document.getElementById('passwordInput').value;
-      const statusEl = document.getElementById('status');
-
-      statusEl.innerText = 'Connecting...';
-
-      // dummy check
-      if (pass === '1234') {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('scoreSection').style.display = 'block';
-        document.getElementById('fixedSubmitBtn').style.display = 'block';
-        statusEl.innerText = 'Login Success!';
-      } else {
-        statusEl.innerText = 'Login Failed! (Try 1234)';
-      }
-    }
-
-    function submitScores() {
-      alert('Submit logic here — will post to Google Sheets.');
-    }
-  </script>
+    <script type="module" src="js/app.js" defer></script>
 </body>
 </html>
