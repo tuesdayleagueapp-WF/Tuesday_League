@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tuesday League</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="wrap">
+        <h1>Tuesday League</h1>
+        <div class="muted">Live Match Scoring & Rankings</div>
+
+        <!-- LOGIN -->
+        <div id="loginSection">
+            <label>Select Table</label>
+            <select id="tableSelect">
+                <option value="1" selected>Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
+
+            <label>PIN Password</label>
+            <div class="pass-wrap">
+                <input id="passwordInput" type="password" inputmode="numeric" placeholder="Enter PIN">
+                <button type="button" id="togglePass" class="eye-btn">👁️</button>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:10px;">
+                <div style="flex:1">
+                    <label>Games</label>
+                    <select id="loginGamesSelect">
+                        <option value="2">2 Games</option>
+                        <option value="3" selected>3 Games</option>
+                    </select>
+                </div>
+                <div style="flex:1">
+                    <label>Format</label>
+                    <div class="radioRow" id="formatRow">
+                        <label class="inline"><input type="radio" name="mode" value="normal"> Normal</label>
+                        <!-- added sudden-death class to this label -->
+                        <label class="inline sudden-death"><input type="radio" name="mode" value="sudden" checked> Sudden Death</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <button id="loginBtn" class="btn" style="flex:1">LOGIN</button>
+                <button id="rankBtnLogin" class="btn alt">Rankings</button>
+            </div>
+
+            <div id="loginMsg" class="small">Enter PIN then fetch</div>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div id="optionsSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div>
+                    <label style="margin:0">Scheduled Matches</label>
+                    <div class="muted" style="margin-top:4px">Select a match to score</div>
+                </div>
+                <div>
+                    <!-- added sudden-death class to the pill so it's targeted by CSS -->
+                    <span class="label-pill sudden-death" id="modeBadge">Sudden Death</span>
+                    <span class="label-pill" id="gamesBadge">3 Games</span>
+                </div>
+            </div>
+
+            <div class="controls-row" style="margin-bottom:8px;">
+                <button id="backToLoginBtn" class="btn alt">Back</button>
+                <button id="refreshBtn" class="btn alt">Refresh</button>
+                <button id="rankBtnList" class="btn alt">Rankings</button>
+                <button id="logoutBtn" class="btn alt">Logout</button>
+            </div>
+
+            <div id="matchList">Loading...</div>
+        </div>
+
+        <!-- SCORE ENTRY -->
+        <div id="scoreSection" style="display:none;">
+            <label>Direct Score Entry</label>
+            <div id="selectedMatch" class="selectedMatchCard"></div>
+            <div id="gamesContainer"></div>
+            <div class="controls-row" style="margin-top:12px;">
+                <button id="backToMatchesBtn" class="btn alt">Back</button>
+            </div>
+            <div id="submitMsg" class="small"></div>
+        </div>
+    </div>
+
+    <button id="fixedSubmit">SUBMIT SCORES</button>
+
+    <!-- Rankings Overlay -->
+    <div id="rankModalBackdrop" class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rankTitle">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <h2 id="rankTitle" style="margin:0">League Rankings</h2>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <button id="closeRank" class="btn alt">Close</button>
+                </div>
+            </div>
+            <div class="rankingsWrap" id="rankingsContainer">Calculating...</div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js" defer></script>
+</body>
+</html>
