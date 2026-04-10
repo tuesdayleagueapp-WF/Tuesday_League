@@ -1,3 +1,15 @@
+/* ============================================
+   styles.css — Tuesday_League
+   - Fully commented so you can see what each block does.
+   - Adds a dedicated Games Selection section (2 Games / 3 Games) that
+     matches the visual weight of the Match Format controls.
+   - Ensures Normal and Sudden Death sit on the same Y axis.
+   ============================================ */
+
+/* =========================
+   CSS Variables / Theme
+   Reusable colors and small layout vars used across the file.
+   ========================= */
 :root {
     --vh: 1vh;
     --button-bottom: 20px;
@@ -8,30 +20,52 @@
     --card-border: rgba(255,255,255,0.03);
 }
 
+/* =========================
+   Base / Reset styles
+   Page-level defaults: full-height, no margin, base font and colors.
+   ========================= */
 html, body {
     height: 100%;
     margin: 0;
-    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg);
+    font-family: Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background: #000;
     color: #eee;
+}
+
+/* mobile tap highlight and force background */
+html, body {
+    background-color: #000 !important;
     -webkit-tap-highlight-color: transparent !important;
 }
 
+/* Make form controls behave consistently on touch devices */
 select, input, button, .btn {
     -webkit-tap-highlight-color: transparent !important;
     background-clip: padding-box;
-    box-sizing: border-box;
 }
 
+/* =========================
+   Select styling
+   Appearance reset and colours for <select>.
+   ========================= */
 select {
     -webkit-appearance: none;
     appearance: none;
     background-color: #0b0d0f;
     color: #fff;
     border: 1px solid #222;
+    outline: none !important;
+}
+select:focus {
+    background-color: #0b0d0f;
     outline: none;
+    box-shadow: none;
 }
 
+/* =========================
+   Page wrapper + headings
+   Constrains width, adds card-like dark panel look.
+   ========================= */
 .wrap {
     max-width: 900px;
     margin: 14px auto;
@@ -49,6 +83,7 @@ h1 {
     font-size: 1.2rem;
 }
 
+/* Modal title tweak so it sits above pinned header/table content */
 .modal h1 {
     position: relative;
     z-index: 1500;
@@ -57,6 +92,7 @@ h1 {
     padding-bottom: 10px;
 }
 
+/* Small muted paragraph style used around the top of the panel */
 .muted {
     color: var(--muted);
     font-size: 0.92rem;
@@ -64,6 +100,10 @@ h1 {
     text-align: center;
 }
 
+/* =========================
+   Form labels + inputs
+   Basic label and control spacing and sizing.
+   ========================= */
 label {
     display: block;
     margin-top: 10px;
@@ -71,6 +111,7 @@ label {
     font-size: 0.9rem;
 }
 
+/* Generic input/select defaults */
 select, input {
     width: 100%;
     padding: 11px;
@@ -79,10 +120,13 @@ select, input {
     border: 1px solid #222;
     background: #0b0d0f;
     color: #fff;
+    box-sizing: border-box;
     font-size: 1rem;
 }
 
-/* REPAIRED BUTTONS: Using standard flex without column stacking to avoid "Dot" bug */
+/* =========================
+   Buttons (primary + alt)
+   ========================= */
 .btn {
     background: #1982ff;
     color: #fff;
@@ -91,19 +135,14 @@ select, input {
     border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 48px;
-    line-height: 1.2;
 }
 
-    .btn.alt {
-        background: #2f3540;
-        color: #fff;
-    }
+.btn.alt {
+    background: #2f3540;
+    color: #fff;
+}
 
+/* Row used for multiple controls (horizontal layout with wrapping) */
 .controls-row {
     display: flex;
     gap: 8px;
@@ -112,46 +151,74 @@ select, input {
     flex-wrap: wrap;
 }
 
-    .controls-row .btn {
-        flex: 1 1 auto;
-        min-width: 110px;
-    }
+/* =========================
+   Games Selection Section (NEW)
+   - Header + two wide toggle buttons (2 Games / 3 Games)
+   - Buttons are visually matched to main action buttons and to the
+     Match Format radio controls for consistent UI weight.
+   - Place this HTML where your old <select> or badge was.
+   ========================= */
 
-/* FIX FOR THE RADIO BUTTONS (Normal / Sudden Death) */
-.radioRow {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-top: 6px;
-    background: #070d12;
-    padding: 10px; /* added padding to prevent text-clipping */
-    border-radius: 8px;
+/* Section title for grouping */
+.section-header {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  display: block;
 }
 
-.inline {
-    display: flex; /* Ensure radio and text align perfectly */
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    color: #eee;
-    font-size: 0.95rem;
+/* Row that holds the 2/3 game toggle buttons */
+.gamesRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  align-items: center;
+  flex-wrap: nowrap;          /* keep buttons on one line when possible */
 }
 
-    .inline input[type="radio"] {
-        width: 18px; /* Force size so it doesn't become a dot */
-        height: 18px;
-        margin: 0;
-        flex-shrink: 0;
-    }
-
-/* Sudden Death specific wrap fix */
-.sudden-death {
-    white-space: normal !important;
-    line-height: 1.1;
-    max-width: 100px; /* Encourages clean 2-line wrap on mobile */
+/* Toggle buttons styled like main .btn but usable as label toggles */
+.gamesRow .btn.toggle {
+  flex: 1 0 auto;             /* equal width, but do not shrink below min-width */
+  min-width: 120px;           /* readable on phones */
+  min-height: 54px;           /* match .controls-row .btn height for visual parity */
+  padding: 10px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #161d24;        /* neutral dark background */
+  color: #dff0ff;
+  cursor: pointer;
+  user-select: none;
+  border: 0;
 }
 
-/* Match list */
+/* Visual 'selected' state — toggle this class in JS to show selection */
+.gamesRow .btn.toggle.selected {
+  background: var(--accent);
+  color: #001a2b;
+  font-weight: 700;
+}
+
+/* Keep any existing games badge from shrinking */
+.label-pill.games-pill,
+#gamesBadge {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px !important;
+  padding: 6px 12px !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+}
+
+/* =========================
+   Match list + rows
+   ========================= */
 #matchList {
     margin-top: 12px;
     max-height: 420px;
@@ -169,23 +236,69 @@ select, input {
     padding: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     cursor: pointer;
+    position: relative;
+    transition: background .18s;
     min-height: 64px;
 }
+.matchRow.played {
+    background: linear-gradient(90deg, rgba(78,161,255,0.04), rgba(78,161,255,0.01));
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+}
 
-    .matchRow.played {
-        background: linear-gradient(90deg, rgba(78,161,255,0.04), rgba(78,161,255,0.01));
-        border-left: 4px solid var(--accent);
-        padding-left: 10px;
-    }
+.matchContent {
+    flex: 1;
+    min-width: 0;
+}
+.matchTopLeft {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.matchSub {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.matchTitle {
+    color: #e6f0ff;
+    font-weight: 700;
+    margin-top: 6px;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.scoreLine {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
 
-/* Score entry */
+/* Pill container used on each match row for badges/stats */
+.matchPill {
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+/* =========================
+   Score entry controls
+   ========================= */
 .gameRow {
     display: flex;
     gap: 10px;
     margin-top: 8px;
     align-items: center;
 }
-
+.gameLabel {
+    color: var(--muted);
+    font-size: 0.85rem;
+    width: 60px;
+}
 input[type=number] {
     padding: 12px;
     border-radius: 8px;
@@ -197,7 +310,139 @@ input[type=number] {
     font-size: 1.05rem;
 }
 
-/* Rankings Grid */
+/* =========================
+   Fixed submit for scoring (mobile)
+   ========================= */
+#fixedSubmit {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(var(--button-bottom)+10px);
+    z-index: 1200;
+    background: #28a745;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 0;
+    color: white;
+    font-weight: 700;
+    width: 92%;
+    max-width: 720px;
+    display: none;
+}
+
+/* Small helper text */
+.small {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* =========================
+   Password wrapper + eye icon
+   ========================= */
+.pass-wrap {
+    position: relative;
+    margin-top: 6px;
+}
+.pass-wrap input {
+    margin-top: 0;
+    padding-right: 46px; /* leave room for the eye button */
+}
+.eye-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* =========================
+   Radio row (Match Format — Normal / Sudden Death)
+   - Ensures labels align vertically and match games button height.
+   ========================= */
+
+/* The row container */
+.radioRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;   /* center the options vertically */
+    margin-top: 6px;
+    background: #070d12;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+/* Labels inside radioRow are inline-flex so they can be centered easily
+   and given a consistent height so both options sit on same Y axis. */
+.radioRow label,
+.inline {
+    display: inline-flex;
+    align-items: center;      /* vertically center radio + text */
+    gap: 8px;
+    color: #eee;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    min-height: 54px;         /* match games buttons */
+    padding: 6px 8px;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Radio input sizing so it doesn't shift baseline */
+.radioRow input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0 6px 0 0;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+/* Sudden Death label gets the same visual treatment so alignment matches */
+.sudden-death {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap !important;
+    line-height: 1.05;
+    max-width: 160px;
+    min-height: 54px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+}
+
+/* =========================
+   Small rounded "pills" for badges
+   (kept as in your working version)
+   ========================= */
+.label-pill {
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: #161d24;
+    color: #dff0ff;
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+}
+.label-pill.games-pill {
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: #161d24;
+    color: #dff0ff;
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+}
+
+/* =========================
+   Modal / rankings / table visuals
+   ========================= */
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -207,7 +452,6 @@ input[type=number] {
     justify-content: center;
     z-index: 2000;
 }
-
 .modal {
     width: 96%;
     max-width: 1100px;
@@ -219,7 +463,6 @@ input[type=number] {
     max-height: 90vh;
     overflow: hidden;
 }
-
 .rankingsWrap {
     max-height: 72vh;
     overflow: auto;
@@ -229,7 +472,6 @@ input[type=number] {
     position: relative;
     background: #000;
 }
-
 .rank-grid {
     width: 100%;
     border-collapse: separate;
@@ -238,55 +480,158 @@ input[type=number] {
     font-size: 0.9rem;
     min-width: 700px;
 }
+.rank-grid thead th {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: #0b0d0f;
+    background-clip: padding-box;
+    color: var(--muted);
+    padding: 20px 6px;
+    border-bottom: 2px solid #222;
+    text-align: left;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    vertical-align: middle;
+}
+.rank-grid tbody td {
+    padding: 8px 6px;
+    border-bottom: 0;
+    color: #eee;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.rank-grid tbody tr.row-card td,
+.rank-grid tbody tr.row-card th {
+  border: 4px solid #000;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, #06384a, #001217) !important;
+  font-weight: 700;
+  color: #ffff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+}
+.rank-grid tbody tr.row-card td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+.rank-grid tbody tr.row-card td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.rank-grid tbody tr.row-card:hover td {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.55);
+}
 
-    .rank-grid thead th {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        background-color: #0b0d0f;
-        background-clip: padding-box;
-        color: var(--muted);
-        padding: 20px 6px;
-        border-bottom: 2px solid #222;
-        text-align: left;
-        white-space: nowrap;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-    }
+/* Small helpers */
+.center {
+    text-align: center !important;
+}
+.pill-win {
+    background: #1a8a3a;
+    color: #cff6df;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+.pill-lose {
+    background: #8a1a1a;
+    color: #ffd6d6;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+.pill-none {
+    color: var(--muted);
+    display: inline-block;
+    background: rgba(43,47,54,0.4);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
 
-    .rank-grid tbody tr.row-card td {
-        background: linear-gradient(90deg,#06384a,#001217) !important;
-        color: #fff;
-        padding: 12px;
-        border-top: 4px solid #000;
-        border-bottom: 4px solid #000;
-    }
+/* Header/cell helpers */
+.header-match { font-size: 0.78rem; color: var(--muted); display: block; }
+.header-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e6f0ff;
+    margin-top: 6px;
+    display: block;
+    white-space: normal;
+    max-width: 140px;
+}
+.cell-main { margin-bottom: 6px; white-space: nowrap; }
+.cell-detail { font-size: 0.78rem; color: var(--muted); white-space: normal; max-width: 140px; margin: 0 auto; }
 
-        .rank-grid tbody tr.row-card td:first-child {
-            border-left: 4px solid #000;
-            border-top-left-radius: 12px;
-            border-bottom-left-radius: 12px;
-        }
+/* Pinned header clone visuals */
+.pinned-rank-header {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  z-index: 1200;
+  pointer-events: none;
+  background: #0b0d0f;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+}
+.pinned-rank-header table { border-collapse: collapse; width: 100%; }
+.pinned-rank-header thead th { background: #0b0d0f; color: var(--muted); padding: 10px 6px; border-bottom: 2px solid #222; box-shadow: 0 2px 5px rgba(0,0,0,0.45); vertical-align: middle; }
 
-        .rank-grid tbody tr.row-card td:last-child {
-            border-right: 4px solid #000;
-            border-top-right-radius: 12px;
-            border-bottom-right-radius: 12px;
-        }
-
-/* MOBILE fixes */
+/* =========================
+   Mobile-specific tweaks
+   Reduce spacing and adjust table behaviour on small screens.
+   ========================= */
 @media (max-width:720px) {
-    .radioRow {
-        justify-content: space-between;
-    }
+    .wrap { margin: 8px; padding: 10px; }
+    .rank-grid thead th, .rank-grid td { padding: 8px 6px; font-size: 0.88rem; }
+    .matchTitle { font-size: 0.96rem; }
+    .header-name, .cell-detail { font-size: 0.8rem; max-width: 100px; }
 
+    /* Make ranking container scrollable horizontally when necessary */
     .rankingsWrap {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         max-height: calc(100vh - 110px);
+        overflow-y: auto;
         padding: 0 6px 6px 6px !important;
+        position: relative;
+        background: #000;
+        margin-top: 0;
     }
 
-    .rank-grid {
-        display: table;
-        min-width: 700px;
-    }
+    .pinned-rank-header { position: absolute; top: 0 !important; right: 6px; left: 6px; z-index: 1000; pointer-events: none; overflow: hidden; background: #0b0d0f; border-radius: 0; }
+
+    .rank-grid { display: table; width: auto; min-width: 700px; table-layout: auto; margin-top: 6px; font-size: 0.9rem; }
+    .rank-grid thead { display: table-header-group; }
+    .rank-grid.has-pinned-header thead th { visibility: hidden; }
+
+    /* Slightly narrower games-pill on small screens if present */
+    .label-pill.games-pill { min-width: 80px; padding: 4px 8px; font-size: 0.78rem; }
+}
+
+/* Minor accessibility / focus states for row-cards */
+.rank-grid tbody tr.row-card:focus-within td,
+.rank-grid tbody tr.row-card:active td {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+/* FORCE AND SQUASH - This uses different properties to shrink the box */
+.matchRow .label-pill.pill-none.status-pill {
+    background-color: #2b2f36 !important;
+    padding: 0 !important;              /* Wipe all padding */
+    width: 60px !important;             /* Force a fixed tiny width */
+    height: 20px !important;            /* Force a fixed tiny height */
+    line-height: 20px !important;       /* Center text vertically */
+    font-size: 11px !important;         /* Drop font size to tiny */
+    display: block !important;          /* Change from flex to block */
+    text-align: center !important;      /* Center text horizontally */
+    margin: 0 !important;
+    min-width: 0 !important;            /* Wipe the old min-width */
 }
