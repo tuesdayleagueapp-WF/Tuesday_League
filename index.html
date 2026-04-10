@@ -1,45 +1,170 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | TableTennisApp</title>
-  </head>
-  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=1280 height=768 tabindex="-1" style="width: 1280px; height: 768px; background: #231F20"></canvas>
-    <script src="Build/TableTennisWebBuild.loader.js"></script>
-    <script>
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tuesday League</title>
+    <!-- Main stylesheet (keep the same path) -->
+    <link rel="stylesheet" href="css/styles.css">
+<style>
+  /* PENDING PILL: NARROW WIDTH + MATCHING GREEN PILL HEIGHT (29px total) */
+  #matchList .matchRow .matchPill span.label-pill.status-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* THE HEIGHT MATCH (17px text + 6px top + 6px bottom = 29px) */
+    height: 17px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    line-height: 1 !important;
+    
+    /* THE WIDTH CRUSH - Tightening it up */
+    min-width: 44px !important;    /* Forcing it narrow */
+    width: 44px !important;        /* No, really, stay narrow */
+    padding-left: 2px !important;   /* Kill side padding to stay small */
+    padding-right: 2px !important;
+    
+    /* ALIGNMENT (Matches the green pill's 6px margin-top) */
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+    
+    /* STYLE/FONT (Matches your screenshot) */
+    font-size: 11px !important;     /* Slightly smaller text to fit narrow width */
+    border-radius: 8px !important;  /* Matches green pill radius */
+    background-color: #2b2f36 !important;
+    color: #a0a0a0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+  }
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>Tuesday League</h1>
+        <div class="muted">Live Match Scoring & Rankings</div>
 
-        var canvas = document.querySelector("#unity-canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.style.position = "fixed";
+        <!-- ========================
+             LOGIN SECTION
+             - Users pick table, enter PIN, choose number of games and format.
+             - Games Selection now uses two toggle buttons (2 / 3) on their own line.
+             - Match Format remains as radio controls below the Games selection.
+             ========================= -->
+        <div id="loginSection">
+            <!-- Table selector -->
+            <label>Select Table</label>
+            <select id="tableSelect">
+                <option value="1" selected>Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
 
-        document.body.style.textAlign = "left";
+            <!-- PIN field with eye toggle -->
+            <label>PIN Password</label>
+            <div class="pass-wrap">
+                <input id="passwordInput" type="password" inputmode="numeric" placeholder="Enter PIN">
+                <button type="button" id="togglePass" class="eye-btn">👁️</button>
+            </div>
 
-      }
+            <!-- ===== Games Selection (NEW layout) =====
+                 - Header: Games Selection
+                 - Row with two large toggle buttons: 2 Games / 3 Games
+                 - These buttons visually match main action buttons and will set `selectedGamesCount`
+            -->
+            <div class="section-header">Games Selection</div>
+            <div class="gamesRow" id="gamesRow">
+                <!-- Each label acts as a toggle button; contains a hidden radio so existing code that reads radios still works. -->
+                <label class="btn toggle" data-games="2" id="gamesBtn2">
+                    <input type="radio" name="loginGames" value="2" hidden>
+                    2 Games
+                </label>
+                <label class="btn toggle" data-games="3" id="gamesBtn3">
+                    <input type="radio" name="loginGames" value="3" hidden>
+                    3 Games
+                </label>
+            </div>
 
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        arguments: [],
-        dataUrl: "Build/TableTennisWebBuild.data.unityweb",
-        frameworkUrl: "Build/TableTennisWebBuild.framework.js.unityweb",
-        codeUrl: "Build/TableTennisWebBuild.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Wozatronics",
-        productName: "TableTennisApp",
-        productVersion: "1.0",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then((unityInstance) => {
-      }).catch((message) => {
-        alert(message);
-      });
-    </script>
-  </body>
+            <!-- ===== Match Format (Normal / Sudden Death) =====
+                 - Header then radioRow for format choices.
+                 - Radio labels are inline-flex and vertically aligned to match the game buttons.
+            -->
+            <div class="section-header" style="margin-top:12px;">Match Format</div>
+            <div class="radioRow" id="formatRow">
+                <label class="inline">
+                    <input type="radio" name="mode" value="normal"> Normal
+                </label>
+                <label class="sudden-death inline">
+                    <input type="radio" name="mode" value="sudden" checked> Sudden Death
+                </label>
+            </div>
+
+            <!-- Login + Rankings -->
+            <div class="controls-row">
+                <button id="loginBtn" class="btn" style="flex:1">LOGIN</button>
+                <button id="rankBtnLogin" class="btn alt">Rankings</button>
+            </div>
+
+            <div id="loginMsg" class="small">Enter PIN then fetch</div>
+        </div>
+
+        <!-- ========================
+             MATCH LIST
+             - Shows scheduled matches and mode / games badges.
+             - gamesBadge default text set to reflect the new default (2 Games).
+             ========================= -->
+        <div id="optionsSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div>
+                    <label style="margin:0">Scheduled Matches</label>
+                    <div class="muted" style="margin-top:4px">Select a match to score</div>
+                </div>
+                <div>
+                    <span class="label-pill" id="modeBadge">Sudden Death</span>
+                    <span class="label-pill" id="gamesBadge">2 Games</span>
+                </div>
+            </div>
+
+            <div class="controls-row" style="margin-bottom:8px;">
+                <button id="backToLoginBtn" class="btn alt">Back</button>
+                <button id="refreshBtn" class="btn alt">Refresh</button>
+                <button id="rankBtnList" class="btn alt">Rankings</button>
+                <button id="logoutBtn" class="btn alt">Logout</button>
+            </div>
+
+            <div id="matchList">Loading...</div>
+        </div>
+
+        <!-- ========================
+             SCORE ENTRY
+             ========================= -->
+        <div id="scoreSection" style="display:none;">
+            <label>Direct Score Entry</label>
+            <div id="selectedMatch" class="selectedMatchCard"></div>
+            <div id="gamesContainer"></div>
+            <div class="controls-row" style="margin-top:12px;">
+                <button id="backToMatchesBtn" class="btn alt">Back</button>
+            </div>
+            <div id="submitMsg" class="small"></div>
+        </div>
+    </div>
+
+    <button id="fixedSubmit">SUBMIT SCORES</button>
+
+    <!-- Rankings Overlay -->
+    <div id="rankModalBackdrop" class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rankTitle">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <h2 id="rankTitle" style="margin:0">League Rankings</h2>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <button id="closeRank" class="btn alt">Close</button>
+                </div>
+            </div>
+            <div class="rankingsWrap" id="rankingsContainer">Calculating...</div>
+        </div>
+    </div>
+
+    <!-- Main app script (module). Keep this as-is — we'll add wiring code to js/app.js -->
+    <script type="module" src="js/app.js" defer></script>
+</body>
 </html>
